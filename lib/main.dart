@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,116 +11,219 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class MyHomePage extends StatelessWidget {
+  const MyHomePage();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          child: AspectRatio(
+        aspectRatio: 2.0,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: LineChart(
+            LineChartData(
+              lineBarsData: [
+                LineChartBarData(
+                  show: true,
+                  spots: [
+                    const FlSpot(0, 0),
+                    const FlSpot(1, 6),
+                    const FlSpot(2, 1),
+                    const FlSpot(3, 9),
+                    const FlSpot(4, 0),
+                    const FlSpot(5, 9),
+                    const FlSpot(6, 2),
+                  ],
+                  // color: Colors.red, //can't provide gradient and color together
+                  gradient: const LinearGradient(
+                    colors: [
+                      Colors.red,
+                      Colors.purpleAccent,
+                      Colors.lightBlue,
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                  barWidth: 4, //change the width of the line
+                  isCurved: true, // to have a curved line chart
+                  // curveSmoothness: 0.35, // to control the smoothness of the curve
+                  // preventCurveOverShooting: true, // it prevents the line from overflow
+                  isStrokeCapRound: true, // to make the edges round
+                  // isStrokeJoinRound: true, // if the isCurved is true then we don't need this
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: Colors.red.withOpacity(0.3),
+                  ),
+                  aboveBarData: BarAreaData(
+                    show: true,
+                    color: Colors.green.withOpacity(0.3),
+                  ),
+                  dotData: FlDotData(
+                    show: true,
+                    checkToShowDot: (spot, barData) {
+                      // return spot.x % 2 == 0;
+                      // return spot.x == 0; //to show a particular point
+                      // return true;
+                      return false;
+                    },
+                    getDotPainter: (
+                      //to convert the point to cross shape
+                      FlSpot spot,
+                      double xPercentage,
+                      LineChartBarData bar,
+                      int index, {
+                      double? size,
+                    })
+                        //  {
+                        //   return FlDotCrossPainter(
+                        //     size: 40,
+                        //     color: [
+                        //       Colors.red,
+                        //       Colors.blue,
+                        //       Colors.green,
+                        //     ][index % 3],
+                        //   );
+                        // }
+                        {
+                      return FlDotSquarePainter(
+                        size: 20,
+                        color: [
+                          Colors.red,
+                          Colors.blue,
+                          Colors.green,
+                        ][index % 3],
+                      );
+                    },
+                  ),
+                  // shadow: const Shadow(
+                  //   color: Colors.yellow,
+                  //   blurRadius: 40,
+                  // ),
+                  // dashArray: [4, 8, 50],
+                  // showingIndicators: [1, 5],
+                  isStepLineChart: true, // becomes a stepped line chart
+                  lineChartStepData: const LineChartStepData(
+                    stepDirection: 0.5,
+                  ),
+                ),
+                LineChartBarData(
+                  show: true,
+                  spots: [
+                    const FlSpot(0, 0),
+                    const FlSpot(1, 3),
+                    const FlSpot(2, 2),
+                    const FlSpot(3, 7),
+                    const FlSpot(4, 4),
+                    const FlSpot(5, 2),
+                    const FlSpot(6, 5),
+                  ],
+                  // color: Colors.red, //can't provide gradient and color together
+                  gradient: const LinearGradient(
+                    colors: [
+                      Colors.red,
+                      Colors.purpleAccent,
+                      Colors.lightBlue,
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                  barWidth: 4, //change the width of the line
+                  isCurved: true, // to have a curved line chart
+                  // curveSmoothness: 0.35, // to control the smoothness of the curve
+                  // preventCurveOverShooting: true, // it prevents the line from overflow
+                  isStrokeCapRound: true, // to make the edges round
+                  isStepLineChart: false, // becomes a stepped line chart
+                  lineChartStepData: const LineChartStepData(
+                    stepDirection: 0.5,
+                  ),
+                ),
+              ],
+              // backgroundColor: Colors.black,
+              clipData: FlClipData.all(),
+              betweenBarsData: [
+                BetweenBarsData(
+                  fromIndex: 0,
+                  toIndex: 1,
+                  color: Colors.black87,
+                ),
+              ],
+              gridData: const FlGridData(
+                show: true,
+                drawHorizontalLine: false,
+              ),
+              borderData: FlBorderData(
+                show: true,
+                // border: Border.all(
+                //   color: Colors.red,
+                //   width: 4,
+                // ),
+                border: const Border(
+                  left: BorderSide(
+                    color: Colors.blue,
+                    width: 4,
+                  ),
+                  bottom: BorderSide(
+                    color: Colors.blue,
+                    width: 4,
+                  ),
+                ),
+              ),
+              // minX: 0,
+              // maxX: 20,
+              // minY: 5,
+              // maxY: 10,
+              // extraLinesData:
+              //     ExtraLinesData(horizontalLines: [HorizontalLine(y: 3)]),
+              // lineTouchData: LineTouchData(
+              // touchCallback: (event, result) {
+              //   final response = result as LineTouchResponse;
+              //   print('Event: $event, result: ${response}');
+              // },
+              // handleBuiltInTouches: false,
+              // touchSpotThreshold: 30,
+              // getTouchLineEnd: (LineChartBarData barData, int spotIndex) {
+              //   return double.infinity;
+              // },
+              // ),
+              titlesData: FlTitlesData(
+                show: true,
+                rightTitles: AxisTitles(
+                  // axisNameWidget: Text('Data'),
+                  axisNameWidget: const Icon(Icons.ac_unit),
+                  axisNameSize: 30,
+                  sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (double value, TitleMeta meta) {
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            meta.formattedValue,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        );
+                        // return SideTitleWidget(
+                        //   axisSide: meta.axisSide,
+                        //   child: Text(
+                        //     meta.formattedValue,
+                        //   ),
+                        // );
+                      }),
+                ),
+              ),
+              // lineTouchData: const LineTouchData(enabled: false),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      )),
     );
   }
 }
