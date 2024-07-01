@@ -1,3 +1,5 @@
+import 'package:data_visualizer/bar.dart';
+import 'package:data_visualizer/line.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +15,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+      // home: MyHomePage(),
+      // home: Line(),
+      // home: Line(),
+      home: bar(),
     );
   }
 }
